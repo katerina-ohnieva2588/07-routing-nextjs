@@ -5,10 +5,12 @@ import NotesClient from "./Notes.client";
 export default async function NotesPage() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["notes", { page: 1, perPage: 10 }],
-    queryFn: () => fetchNotes({ page: 1, perPage: 10 }),
-  });
+const queryKey = ["notes", 1, 10];
+
+await queryClient.prefetchQuery({
+  queryKey,
+  queryFn: () => fetchNotes({ page: 1, perPage: 10 }),
+});
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

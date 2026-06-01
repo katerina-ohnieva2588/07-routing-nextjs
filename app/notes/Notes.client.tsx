@@ -20,14 +20,14 @@ export default function NotesClient() {
   }, 300);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["notes", page, search],
-    queryFn: () =>
-      fetchNotes({
-        page,
-        perPage: 12,
-        search,
-      }),
-  });
+  queryKey: ["notes", page, search], 
+  queryFn: () =>
+    fetchNotes({
+      page,
+      perPage: 12,
+      search,
+    }),
+});
 
   const deleteMutation = useMutation({
     mutationFn: deleteNote,
