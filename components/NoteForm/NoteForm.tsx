@@ -1,80 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { FormEvent } from "react";
-
 import { createNote } from "@/lib/api";
-import css from "./NoteForm.module.css";
 
-export default function NoteForm() {
+import type { CreateNotePayload } from "@/lib/api";
+
+interface NoteFormProps {
+  onCancel?: () => void;
+}
+
+const validationSchema = Yup.object({
+  title: Yup.string()
+    .min(3, "Min 3 characters")
+    .max(50, "Max 50 characters")
+    .required("Title is required"),
+
+  content: Yup.string()
+    .max(500, "Max 500 characters")
+    .notRequired(),
+
+  tag: Yup.string()
+    .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
+    .required("Tag is required"),
+});
+
+const initialValues: CreateNotePayload = {
+  title: "",
+  content: "",
+  tag: "Todo",
+};
+
+export default function NoteForm({ onCancel }: NoteFormProps) {
   const queryClient = useQueryClient();
 
-  const [form, setForm] = useState({
-    title: "",
-    content: "",
-    tag: "",
-  });
-
-  const { mutate, isPending } = useMutation({
+  const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      setForm({ title: "", content: "", tag: "" });
+      onCancel?.();
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!form.title || !form.content || !form.tag) return;
-
-    mutate(form);
-  };
-
   return (
-    <form className={css.form} onSubmit={handleSubmit}>
-      <h2 className={css.title}>Create Note</h2>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={async (values, { resetForm }) => {
+        try {
+          await mutation.mutateAsync(values);
+          resetForm();
+        } catch (error) {
+          console.error(error);
+        }
+      }}
+    >
+      {() => (
+        <Form>
+          <div>
+            <label>Title</label>
+            <Field name="title" />
+            <ErrorMessage name="title" component="div" />
+          </div>
 
-      <input
-        className={css.input}
-        name="title"
-        value={form.title}
-        onChange={handleChange}
-        placeholder="Title"
-        disabled={isPending}
-      />
+          <div>
+            <label>Content</label>
+            <Field name="content" as="textarea" />
+            <ErrorMessage name="content" component="div" />
+          </div>
 
-      <textarea
-        className={css.textarea}
-        name="content"
-        value={form.content}
-        onChange={handleChange}
-        placeholder="Content"
-        disabled={isPending}
-      />
+          <div>
+            <label>Tag</label>
+            <Field name="tag" as="select">
+              <option value="Todo">Todo</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Shopping">Shopping</option>
+            </Field>
+            <ErrorMessage name="tag" component="div" />
+          </div>
 
-      <input
-        className={css.input}
-        name="tag"
-        value={form.tag}
-        onChange={handleChange}
-        placeholder="Tag"
-        disabled={isPending}
-      />
+          <button type="submit" disabled={mutation.isPending}>
+            Create note
+          </button>
 
-      <button className={css.button} type="submit" disabled={isPending}>
-        {isPending ? "Creating..." : "Create Note"}
-      </button>
-    </form>
+          <button type="button" onClick={() => onCancel?.()}>
+            Cancel
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 }

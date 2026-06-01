@@ -1,11 +1,6 @@
 import axios from "axios";
 import type { Note } from "../types/note";
 
-export const fetchNoteById = async (id: string): Promise<Note> => {
-  const response = await api.get<Note>(`/notes/${id}`);
-  return response.data;
-};
-
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
@@ -32,6 +27,11 @@ const api = axios.create({
     : {},
 });
 
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const response = await api.get<Note>(`/notes/${id}`);
+  return response.data;
+};
+
 export const fetchNotes = async (
   params: FetchNotesParams
 ): Promise<FetchNotesResponse> => {
@@ -45,11 +45,7 @@ export const fetchNotes = async (
 export const createNote = async (
   payload: CreateNotePayload
 ): Promise<Note> => {
-  const response = await api.post<Note>(
-    "/notes",
-    payload
-  );
-
+  const response = await api.post<Note>("/notes", payload);
   return response.data;
 };
 
