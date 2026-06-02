@@ -4,3 +4,5 @@ export const notesKey = (page: number, search: string, perPage: number) => [
   search,
   perPage,
 ];
+
+export const noteKey = (id: string) => ["note", id];

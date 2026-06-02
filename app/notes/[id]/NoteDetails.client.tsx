@@ -8,8 +8,8 @@ import css from "./NoteDetails.module.css";
 
 export default function NoteDetailsClient() {
   const params = useParams<{ id: string }>();
-  const id = params.id;
 
+  const id = params.id;
   const {
     data: note,
     isLoading,
@@ -17,8 +17,8 @@ export default function NoteDetailsClient() {
   } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
-    enabled: !!id,
-  });
+    enabled: Boolean(id),
+    });
 
   if (isLoading) return <p>Loading, please wait...</p>;
 

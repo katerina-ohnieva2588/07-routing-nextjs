@@ -1,44 +1,33 @@
 "use client";
 
-import type { ComponentType } from "react";
-import ReactPaginateModule from "react-paginate";
-import type { ReactPaginateProps } from "react-paginate";
-
+import ReactPaginate from "react-paginate";
 import css from "./Pagination.module.css";
 
-type ModuleWithDefault<T> = { default: T };
-
-const ReactPaginate = (
-  ReactPaginateModule as unknown as ModuleWithDefault<ComponentType<ReactPaginateProps>>
-).default;
-
 interface PaginationProps {
-  pageCount: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
+  page: number;
+  totalPages: number;
+  onChange: (page: number) => void;
 }
 
 export default function Pagination({
-  pageCount,
-  currentPage,
-  onPageChange,
+  page,
+  totalPages,
+  onChange,
 }: PaginationProps) {
   return (
-   <ReactPaginate
-  pageCount={pageCount}
-  forcePage={currentPage - 1}
-  onPageChange={(event: { selected: number }) =>
-    onPageChange(event.selected + 1)
-  }
-  containerClassName={css.pagination}
-  activeClassName={css.active}
-  pageClassName={css.pageItem}
-  previousClassName={css.pageItem}
-  nextClassName={css.pageItem}
-  breakClassName={css.pageItem}
-  pageLinkClassName={css.pageLink}
-  previousLabel="<"
-  nextLabel=">"
-/>
+    <ReactPaginate
+      pageCount={totalPages}
+      forcePage={page - 1}
+      onPageChange={(event) => onChange(event.selected + 1)}
+      containerClassName={css.pagination}
+      activeClassName={css.active}
+      pageClassName={css.pageItem}
+      previousClassName={css.pageItem}
+      nextClassName={css.pageItem}
+      breakClassName={css.pageItem}
+      pageLinkClassName={css.pageLink}
+      previousLabel="<"
+      nextLabel=">"
+    />
   );
 }

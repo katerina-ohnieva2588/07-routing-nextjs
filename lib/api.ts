@@ -55,3 +55,4 @@ export const deleteNote = async (id: string): Promise<Note> => {
 };
 
 export default api;
+
