@@ -8,9 +8,9 @@ import NoteDetailsClient from "./NoteDetails.client";
 export default async function NotePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const id = params.id;
+  const { id } = await params;
 
   const queryClient = new QueryClient({
     defaultOptions: {

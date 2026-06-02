@@ -38,18 +38,22 @@ export default function NotesClient() {
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
+ 
+  const totalPages = data?.totalPages ?? 0;
 
   return (
     <div className={css.app}>
       <div className={css.toolbar}>
         <SearchBox onChange={debouncedSearch} />
 
-        <Pagination
-        page={page}
-        totalPages={data?.totalPages ?? 1}
-        onChange={setPage}
-        />
-
+          {totalPages > 1 && (
+          <Pagination
+          page={page}
+          totalPages={totalPages}
+          onChange={setPage}
+          />
+          )}
+    
         <button
           className={css.button}
           onClick={() => setIsModalOpen(true)}
