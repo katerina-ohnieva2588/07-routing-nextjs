@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 import { notesKey } from "@/lib/queryKeys";
-import NotesClient from "@/components/Notes.client/Notes.client";
+import NotesClient from "@/app/notes/filter/[...slug]/Notes.client";
 
 export default async function NotesFilterPage({
   params,
