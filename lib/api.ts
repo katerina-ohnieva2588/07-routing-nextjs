@@ -16,6 +16,7 @@ interface FetchNotesParams {
   page: number;
   perPage: number;
   search?: string;
+  tag?: string;
 }
 
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
