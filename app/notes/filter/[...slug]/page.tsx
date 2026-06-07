@@ -10,7 +10,7 @@ import NotesClient from "@/app/notes/filter/[...slug]/Notes.client";
 export default async function NotesFilterPage({
   params,
 }: {
-  params: Promise<{ slug?: string[] }>;
+  params: { slug?: string[] };
 }) {
   const queryClient = new QueryClient();
 
