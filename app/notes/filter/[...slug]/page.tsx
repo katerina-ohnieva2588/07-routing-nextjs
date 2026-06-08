@@ -5,16 +5,16 @@ import {
 } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 import { notesKey } from "@/lib/queryKeys";
-import NotesClient from "@/app/notes/filter/[...slug]/Notes.client";
+import NotesClient from "./Notes.client";
 
 export default async function NotesFilterPage({
   params,
 }: {
-  params: { slug?: string[] };
+  params: Promise<{ slug?: string[] }>;
 }) {
-  const queryClient = new QueryClient();
-
   const { slug } = await params;
+
+  const queryClient = new QueryClient();
 
   const page = 1;
   const perPage = 15;

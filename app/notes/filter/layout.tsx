@@ -1,3 +1,5 @@
+import css from "./LayoutNotes.module.css";
+
 export default function Layout({
   children,
   sidebar,
@@ -6,10 +8,9 @@ export default function Layout({
   sidebar: React.ReactNode;
 }) {
   return (
-    <div style={{ display: "flex", gap: "24px" }}>
-      <aside style={{ width: 250 }}>{sidebar}</aside>
-      <main>{children}</main>
+    <div className={css.container}>
+      <aside className={css.sidebar}>{sidebar}</aside>
+      <main className={css.notesWrapper}>{children}</main>
     </div>
   );
 }
-

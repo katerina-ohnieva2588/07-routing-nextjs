@@ -15,7 +15,7 @@ import NoteForm from "@/components/NoteForm/NoteForm";
 import { fetchNotes } from "@/lib/api";
 import { notesKey } from "@/lib/queryKeys";
 
-export default function NotesClient() {
+export default function NotesClient({ tag }: { tag?: string }) {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -28,17 +28,20 @@ export default function NotesClient() {
   }, 300);
 
   const { data, isLoading, isError } = useQuery({
-  queryKey: notesKey(page, search, PER_PAGE, undefined),
+  queryKey: notesKey(page, search, PER_PAGE, tag ?? "all"),
   queryFn: () =>
     fetchNotes({
       page,
       perPage: PER_PAGE,
       search,
+      tag: tag === "all" ? undefined : tag,
     }),
   placeholderData: keepPreviousData,
+  staleTime: 60_000,
   refetchOnMount: false,
+  refetchOnWindowFocus: false,
 });
- 
+
   const totalPages = data?.totalPages ?? 0;
 
   return (
@@ -46,18 +49,11 @@ export default function NotesClient() {
       <div className={css.toolbar}>
         <SearchBox onChange={debouncedSearch} />
 
-          {totalPages > 1 && (
-          <Pagination
-          page={page}
-          totalPages={totalPages}
-          onChange={setPage}
-          />
-          )}
-    
-        <button
-          className={css.button}
-          onClick={() => setIsModalOpen(true)}
-        >
+        {totalPages > 1 && (
+          <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+        )}
+
+        <button className={css.button} onClick={() => setIsModalOpen(true)}>
           Create note +
         </button>
       </div>
@@ -75,4 +71,3 @@ export default function NotesClient() {
     </div>
   );
 }
-
