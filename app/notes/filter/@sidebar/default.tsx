@@ -1,7 +1,13 @@
 import Link from "next/link";
 import css from "@/components/SidebarNotes/SidebarNotes.module.css";
 
-const tags = ["todo", "work", "personal", "meeting", "shopping"];
+const tags = [
+  { value: "todo", label: "Todo" },
+  { value: "work", label: "Work" },
+  { value: "personal", label: "Personal" },
+  { value: "meeting", label: "Meeting" },
+  { value: "shopping", label: "Shopping" },
+];
 
 export default function Default() {
   return (
@@ -12,10 +18,10 @@ export default function Default() {
         </Link>
       </li>
 
-      {tags.map((tag) => (
-        <li key={tag} className={css.menuItem}>
-          <Link href={`/notes/filter/${tag}`} className={css.menuLink}>
-            {tag}
+      {tags.map(({ value, label }) => (
+        <li key={value} className={css.menuItem}>
+          <Link href={`/notes/filter/${value}`} className={css.menuLink}>
+            {label}
           </Link>
         </li>
       ))}
