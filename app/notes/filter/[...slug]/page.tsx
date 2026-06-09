@@ -20,8 +20,7 @@ export default async function NotesFilterPage({
   const perPage = 12;
   const search = "";
 
-  const tagRaw = slug?.[0] ?? "all";
-  const tag = tagRaw === "all" ? undefined : tagRaw;
+  const tag = slug?.[0];
 
   await queryClient.prefetchQuery({
     queryKey: notesKey(page, search, perPage, tag),
