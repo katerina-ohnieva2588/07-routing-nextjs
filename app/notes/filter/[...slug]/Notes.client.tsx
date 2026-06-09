@@ -22,27 +22,30 @@ export default function NotesClient({ tag }: { tag?: string }) {
 
   const perPage = 12;
 
+  const normalizedTag = tag === "all" ? undefined : tag;
+
   const debouncedSearch = useDebouncedCallback((value: string): void => {
     setSearch(value);
     setPage(1);
   }, 300);
 
   const { data, isLoading, isError } = useQuery({
-  queryKey: notesKey(page, search, perPage, tag),
-  queryFn: () =>
-    fetchNotes({
-      page,
-      perPage,
-      search,
-      tag,
-    }),
-  placeholderData: keepPreviousData,
-  staleTime: 60_000,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-});
+    queryKey: notesKey(page, search, perPage, normalizedTag),
+    queryFn: () =>
+      fetchNotes({
+        page,
+        perPage,
+        search,
+        tag: normalizedTag,
+      }),
+    placeholderData: keepPreviousData,
+    staleTime: 60_000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   const totalPages = data?.totalPages ?? 0;
+  const notes = data?.notes ?? [];
 
   return (
     <div className={css.app}>
@@ -61,7 +64,7 @@ export default function NotesClient({ tag }: { tag?: string }) {
       {isLoading && <p>Loading...</p>}
       {isError && <p>Something went wrong</p>}
 
-      {data?.notes && <NoteList notes={data.notes} />}
+      {notes.length > 0 && <NoteList notes={notes} />}
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
