@@ -17,7 +17,7 @@ export default async function NotesFilterPage({
   const queryClient = new QueryClient();
 
   const page = 1;
-  const perPage = 15;
+  const perPage = 12;
   const search = "";
 
   const tagRaw = slug?.[0] ?? "all";

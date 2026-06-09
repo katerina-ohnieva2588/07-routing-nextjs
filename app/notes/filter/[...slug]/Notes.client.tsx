@@ -20,7 +20,7 @@ export default function NotesClient({ tag }: { tag?: string }) {
   const [search, setSearch] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const PER_PAGE = 12;
+  const perPage = 12;
 
   const debouncedSearch = useDebouncedCallback((value: string): void => {
     setSearch(value);
@@ -28,13 +28,13 @@ export default function NotesClient({ tag }: { tag?: string }) {
   }, 300);
 
   const { data, isLoading, isError } = useQuery({
-  queryKey: notesKey(page, search, PER_PAGE, tag ?? "all"),
+  queryKey: notesKey(page, search, perPage, tag),
   queryFn: () =>
     fetchNotes({
       page,
-      perPage: PER_PAGE,
+      perPage,
       search,
-      tag: tag === "all" ? undefined : tag,
+      tag,
     }),
   placeholderData: keepPreviousData,
   staleTime: 60_000,

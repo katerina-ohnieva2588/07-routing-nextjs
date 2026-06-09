@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal/Modal";
+import { noteKey } from "@/lib/queryKeys";
 
 type Props = {
   id: string;
@@ -13,8 +14,8 @@ export default function NotePreview({ id }: Props) {
   const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["note", id],
-    queryFn: () => fetchNoteById(id),
+  queryKey: noteKey(id),
+  queryFn: () => fetchNoteById(id),
   });
 
   const formattedDate = data

@@ -33,9 +33,25 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
   return response.data;
 };
 
-export const fetchNotes = async (
-  params: FetchNotesParams
-): Promise<FetchNotesResponse> => {
+export const fetchNotes = async ({
+  page,
+  perPage,
+  search,
+  tag,
+}: FetchNotesParams): Promise<FetchNotesResponse> => {
+  const params: FetchNotesParams = {
+    page,
+    perPage,
+  };
+
+  if (search) {
+    params.search = search;
+  }
+
+  if (tag && tag !== "all") {
+    params.tag = tag;
+  }
+
   const response = await api.get<FetchNotesResponse>("/notes", {
     params,
   });

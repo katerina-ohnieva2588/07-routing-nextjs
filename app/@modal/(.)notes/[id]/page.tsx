@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 
 import { fetchNoteById } from "@/lib/api";
+import { noteKey } from "@/lib/queryKeys";
 import NotePreview from "./NotePreview.client";
 
 export default async function Page({
@@ -17,7 +18,7 @@ export default async function Page({
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["note", id],
+    queryKey: noteKey(id),
     queryFn: () => fetchNoteById(id),
   });
 
